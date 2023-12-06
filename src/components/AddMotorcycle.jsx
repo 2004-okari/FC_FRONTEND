@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBike } from '../redux/Bikes/bikeSlice';
 import '../App.css';
 /* eslint-disable jsx-a11y/label-has-associated-control, jsx-a11y/label-has-for */
 
 const AddMotorcycle = () => {
+  const imageInputRef = useRef(null);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: '',
-    image: '',
+    image: null,
     description: '',
     deposit: '',
     finance_fee: '',
@@ -16,6 +17,7 @@ const AddMotorcycle = () => {
     total_amount_payable: '',
     duration: '',
   });
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -23,18 +25,29 @@ const AddMotorcycle = () => {
       [name]: value,
     }));
   };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.image || !formData.description
+    if (!formData.name.trim() || !formData.description
     || !formData.deposit || !formData.finance_fee || !formData.option_to_purchase_fee
     || !formData.duration || !formData.total_amount_payable) {
       alert('Please fill all the fields.');
       return;
     }
     dispatch(createBike(formData));
+
+    // Clear the form data after submission
     setFormData({
       name: '',
-      image: '',
+      image: null,
       description: '',
       deposit: '',
       finance_fee: '',
@@ -58,13 +71,13 @@ const AddMotorcycle = () => {
             className="rounded-md border-solid border-4 p-1"
           />
         </div>
-        <div className="flex flex-col  w-full gap-1">
+        <div className="flex flex-col w-full gap-1">
           <label className="font-bold">Bike Image</label>
           <input
-            type="text"
+            type="file"
             name="image"
-            value={formData.image}
-            onChange={handleInputChange}
+            onChange={handleImageChange}
+            ref={imageInputRef}
             className="rounded-md border-solid border-4 p-1"
           />
         </div>
