@@ -20,6 +20,7 @@ function AuthenticatedRoute({ element }) {
   const isAuthenticated = useSelector((state) => state.auth.authenticate);
   return isAuthenticated ? element : <Navigate to="/login" />;
 }
+
 function App() {
   return (
     <BrowserRouter>
@@ -48,13 +49,18 @@ function App() {
             path="reservation"
             element={<AuthenticatedRoute element={<ReservationList />} />}
           />
-          <Route path="delete-motor" element={<AuthenticatedRoute element={<DeleteMotorcycle />} />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+          <Route
+            path="delete-motor"
+            element={<AuthenticatedRoute element={<DeleteMotorcycle />} />}
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
 AuthenticatedRoute.propTypes = {
   element: PropTypes.node.isRequired,
 };
+
 export default App;
